@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>品証ｽﾃｰﾀｽ</title>
+<link rel="icon" href="https://notion-emojis.s3-us-west-2.amazonaws.com/prod/svg-twitter/1f928.svg">
+<link rel="apple-touch-icon" href="https://notion-emojis.s3-us-west-2.amazonaws.com/prod/svg-twitter/1f928.svg">
+
 <style>
 :root {
   --font-main: "BIZ UDPGothic", "Meiryo", "system-ui", sans-serif;
@@ -44,7 +47,7 @@ body { color: var(--text-main); background: var(--bg-app); font-size: 18px; line
 
 /* タブ */
 .view-tabs { display: flex; gap: 2px; margin-bottom: 0.4rem; background: var(--bg-sub); padding: 3px; border-radius: var(--radius-sm); width: fit-content; border: 1px solid var(--border-color); flex-wrap: wrap; }
-.view-tab { padding: 4px 16px; font-size: 13px; font-weight: 800; cursor: pointer; background: none; border: none; color: var(--text-sub); transition: 0.2s; border-radius: 3px; white-space: nowrap; }
+.view-tab { padding: 4px 16px; font-size: 14px; font-weight: 800; cursor: pointer; background: none; border: none; color: var(--text-sub); transition: 0.2s; border-radius: 3px; white-space: nowrap; }
 .view-tab.active { color: var(--brand-primary); background: var(--bg-surface); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
 /* ボタン */
@@ -59,7 +62,7 @@ body { color: var(--text-main); background: var(--bg-app); font-size: 18px; line
 /* テーブル */
 .table-wrap { border: 1px solid var(--border-color); border-radius: 4px; overflow: auto; background: var(--bg-surface); }
 table { width: 100%; border-collapse: collapse; font-size: 16px; table-layout: fixed; }
-th { background: var(--bg-sub); color: var(--text-sub); font-weight: 800; padding: 0; border-bottom: 2px solid var(--border-color); text-align: left; font-size: 12px; position: relative; height: 28px; white-space: nowrap; }
+th { background: var(--bg-sub); color: var(--text-sub); font-weight: 800; padding: 0; border-bottom: 2px solid var(--border-color); text-align: left; font-size: 14px; position: relative; height: 28px; white-space: nowrap; }
 .th-inner { display: flex; align-items: center; gap: 4px; padding: 4px 8px; height: 100%; overflow: hidden; }
 td { padding: 0 10px; border-bottom: 1px solid var(--border-color); vertical-align: middle; height: 32px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 tr:last-child td { border-bottom: none; }
@@ -69,7 +72,7 @@ tr.row-dragging { opacity: 0.4; }
 
 .row-handle { cursor: grab; color: var(--text-muted); font-size: 16px; user-select: none; flex-shrink: 0; }
 .row-handle:hover { color: var(--text-sub); }
-.badge { display: inline-flex; align-items: center; padding: 0 10px; border-radius: 4px; font-size: 12px; font-weight: 800; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); min-height: 22px; white-space: nowrap; }
+.badge { display: inline-flex; align-items: center; padding: 0 10px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); min-height: 24px; white-space: nowrap; }
 
 .col-resizer { position: absolute; right: 0; top: 0; width: 8px; height: 100%; cursor: col-resize; z-index: 10; }
 .col-resizer:hover::after, .col-resizer.is-active::after { content: ''; position: absolute; right: 2px; top: 20%; width: 2px; height: 60%; background: var(--brand-primary); border-radius: 2px; }
@@ -77,7 +80,7 @@ th.col-drag-over { border-left: 2px solid var(--brand-primary); }
 
 /* セル内コンテンツ */
 .cell-inner { display: flex; align-items: center; gap: 4px; height: 100%; }
-.cell-btn { display: inline-flex; align-items: center; cursor: pointer; padding: 0 6px; border-radius: 4px; font-size: 15px; border: 1px solid transparent; min-height: 26px; width: 100%; background: none; color: inherit; transition: 0.1s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cell-btn { display: inline-flex; align-items: center; cursor: pointer; padding: 0 6px; border-radius: 4px; font-size: 16px; border: 1px solid transparent; min-height: 26px; width: 100%; background: none; color: inherit; transition: 0.1s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cell-btn:hover { background: var(--bg-app); color: var(--brand-primary); }
 .ot-input { width: 100%; font-size: 13px; font-weight: 400; padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; text-align: center; outline: none; height: 26px; }
 .ot-input:focus { border-color: var(--brand-primary); }
@@ -167,7 +170,20 @@ tr:hover .row-del-btn { opacity: 1; }
       <button class="btn" onclick="window.openDataModal()">データ</button>
     </div>
   </div>
-  <div class="view-tabs" id="view-tabs"></div>
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; gap: 20px;">
+    
+    <div style="flex-shrink: 0;">
+      <div class="view-tabs" id="view-tabs" style="margin-bottom: 0;"></div>
+    </div>
+    
+    <div style="padding-right: 780px; white-space: nowrap; flex-shrink: 1; text-align: right; min-width: 0;"> 
+      <a href="https://id.obc.jp/m6ofohnw7qf6/?manuallogin=True" target="_blank" style="font-size: 14px; color: var(--brand-primary); text-decoration: none; font-weight: 800; border-bottom: 1px solid var(--brand-primary);">
+        ▶︎ 出退勤打刻(Desknet's)
+      </a>
+    </div>
+
+  </div>
+
   <div class="table-wrap">
     <table id="main-table">
       <thead><tr id="thead-row"></tr></thead>
@@ -198,7 +214,7 @@ var INITIAL_DATA = {
       "id": 1,
       "team": "品質保証部",
       "name": "新納 英樹",
-      "status": "未登録",
+      "status": "",
       "out1": "",
       "remarks": "",
       "overtime": "",
@@ -206,162 +222,290 @@ var INITIAL_DATA = {
       "back": ""
     },
     {
-      "id": 10,
+      "id": 2,
       "team": "品証G",
       "name": "水谷 彰宏",
-      "status": "未登録",
-      "back": ""
+      "status": "",
+      "back": "",
+      "out1": "",
+      "out2": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 3,
+      "team": "保証T",
+      "name": "中野 雄貴",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 4,
+      "team": "保証T",
+      "name": "古賀 友章",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 5,
+      "team": "保証T",
+      "name": "東 将史",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 6,
+      "team": "保証T",
+      "name": "山田 睦巳",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 7,
+      "team": "保証T",
+      "name": "齋藤 千穂梨",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 8,
+      "team": "生準品質T",
+      "name": "高木 祥太",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 9,
+      "team": "生準品質T",
+      "name": "加藤 悠",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 10,
+      "team": "生準品質T",
+      "name": "織田 椋樹",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 11,
-      "team": "QMS監査G",
-      "name": "日野 成典",
-      "status": "未登録",
-      "back": ""
+      "team": "生準品質T",
+      "name": "天野 美紀",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 12,
-      "team": "保証T",
-      "name": "中野 雄貴",
-      "status": "未登録"
+      "team": "生準品質T",
+      "name": "ﾒﾍﾔ かずみ",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 13,
-      "team": "保証T",
-      "name": "古賀 友章",
-      "status": "未登録"
+      "team": "QMS監査G",
+      "name": "日野 成典",
+      "status": "",
+      "back": "",
+      "out1": "",
+      "out2": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 14,
-      "team": "保証T",
-      "name": "東 将史",
-      "status": "未登録"
+      "team": "QMS監査G",
+      "name": "植田 和貴",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 15,
-      "team": "保証T",
-      "name": "山田 睦巳",
-      "status": "未登録"
+      "team": "QMS監査T",
+      "name": "加藤 善徳",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 16,
-      "team": "保証T",
-      "name": "齋藤 千穂梨",
-      "status": "未登録"
+      "team": "QMS監査T",
+      "name": "杉浦 誠司",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 17,
-      "team": "生準品質T",
-      "name": "高木 祥太",
-      "status": "未登録"
+      "team": "検査G",
+      "name": "忠谷 翼",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 18,
-      "team": "生準品質T",
-      "name": "加藤 悠",
-      "status": "未登録"
+      "team": "検査T",
+      "name": "冨森 涼平",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 19,
-      "team": "生準品質T",
-      "name": "織田 椋樹",
-      "status": "未登録"
+      "team": "検査T",
+      "name": "渋谷 祐未",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 20,
-      "team": "生準品質T",
-      "name": "天野 美紀",
-      "status": "未登録"
+      "team": "検査T",
+      "name": "住友 優希",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 21,
-      "team": "生準品質T",
-      "name": "ﾒﾍﾔ かずみ",
-      "status": "未登録"
+      "team": "検査T",
+      "name": "磯村 鋭",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 22,
-      "team": "QMS監査T",
-      "name": "加藤 善徳",
-      "status": "未登録"
-    },
-    {
-      "id": 24,
-      "team": "QMS監査T",
-      "name": "植田 和貴",
-      "status": "未登録"
+      "team": "検査T",
+      "name": "加藤 和真",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 23,
-      "team": "QMS監査T",
-      "name": "杉浦 誠司",
-      "status": "未登録"
+      "team": "検査T",
+      "name": "高山 和樹",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
+    },
+    {
+      "id": 24,
+      "team": "検査T",
+      "name": "羽柴 直斗",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 25,
-      "team": "検査G",
-      "name": "忠谷 翼",
-      "status": "未登録"
+      "team": "検査T",
+      "name": "福永 裕之",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 26,
       "team": "検査T",
-      "name": "冨森 涼平",
-      "status": "未登録"
+      "name": "馬場 楓",
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     },
     {
       "id": 27,
       "team": "検査T",
-      "name": "渋谷 祐未",
-      "status": "未登録"
-    },
-    {
-      "id": 28,
-      "team": "検査T",
-      "name": "住友 優希",
-      "status": "未登録"
-    },
-    {
-      "id": 29,
-      "team": "検査T",
-      "name": "磯村 鋭",
-      "status": "未登録"
-    },
-    {
-      "id": 30,
-      "team": "検査T",
-      "name": "加藤 和真",
-      "status": "未登録"
-    },
-    {
-      "id": 31,
-      "team": "検査T",
-      "name": "高山 和樹",
-      "status": "未登録"
-    },
-    {
-      "id": 32,
-      "team": "検査T",
-      "name": "羽柴 直斗",
-      "status": "未登録"
-    },
-    {
-      "id": 33,
-      "team": "検査T",
-      "name": "福永 裕之",
-      "status": "未登録"
-    },
-    {
-      "id": 34,
-      "team": "検査T",
-      "name": "馬場 楓",
-      "status": "未登録"
-    },
-    {
-      "id": 35,
-      "team": "検査T",
       "name": "磯貝 憲伸",
-      "status": "未登録"
+      "status": "",
+      "out1": "",
+      "out2": "",
+      "back": "",
+      "remarks": "",
+      "overtime": ""
     }
   ],
   "cols": [
@@ -380,17 +524,15 @@ var INITIAL_DATA = {
         "QMS監査T",
         "検査T"
       ],
-      "width": 120
+      "width": 114
     },
     {
       "id": "name",
       "label": "氏名",
       "type": "text",
       "fixed": true,
-      "lists": [
-        "新納 英樹"
-      ],
-      "width": 120
+      "lists": [],
+      "width": 113
     },
     {
       "id": "status",
@@ -398,7 +540,7 @@ var INITIAL_DATA = {
       "type": "status",
       "fixed": true,
       "lists": [],
-      "width": 80
+      "width": 76
     },
     {
       "id": "out1",
@@ -409,7 +551,7 @@ var INITIAL_DATA = {
         "西工場",
         "高取工場"
       ],
-      "width": 100
+      "width": 92
     },
     {
       "id": "out2",
@@ -429,7 +571,7 @@ var INITIAL_DATA = {
         "吉良",
         "福井"
       ],
-      "width": 100
+      "width": 92
     },
     {
       "id": "back",
@@ -437,17 +579,15 @@ var INITIAL_DATA = {
       "type": "number",
       "fixed": false,
       "lists": [],
-      "width": 100
+      "width": 80
     },
     {
       "id": "remarks",
       "label": "備考(仕入先名など)",
       "type": "text",
       "fixed": false,
-      "lists": [
-        "エフエヌ"
-      ],
-      "width": 150
+      "lists": [],
+      "width": 140
     },
     {
       "id": "overtime",
@@ -455,7 +595,7 @@ var INITIAL_DATA = {
       "type": "number",
       "fixed": false,
       "lists": [],
-      "width": 120
+      "width": 80
     }
   ],
   "statuses": [
@@ -643,9 +783,16 @@ function getStatusDef(val) {
   return statuses.find(function(s){return s.label===val;}) || {label:val||'未登録',color:'#64748b',bg:'#f1f5f9'};
 }
 function filteredMembers() {
-  var teams = viewDefinitions[activeView] || [];
-  if (teams.length === 0) return members;
-  return members.filter(function(m){ return teams.includes(m.team); });
+var teams = viewDefinitions[activeView] || [];
+  // 「全体」タブを選択している場合は、所属に関わらず全員を表示する
+  if (activeView === '全体') return members;
+
+  // 個別タブ（事務所・検査など）を選択している場合
+  return members.filter(function(m){
+    // そのタブに登録されている所属と「完全に一致する人」だけを表示する
+    // これにより、所属が「—」や「未設定」の人は除外されます
+    return teams.includes(m.team);
+  });
 }
 
 /* ===================== レンダリング ===================== */
@@ -832,40 +979,47 @@ function startColResize(e, ci, th) {
 
 /* ===================== 残業予測セル生成 ===================== */
 window.makeOtSelect = function(memberId, colId, val) {
-  var curH = '', curM = '';
+var curH = '', curM = '';
   if (val && val !== '') {
     var pts = String(val).split(':');
     if (pts.length === 2) { curH = parseInt(pts[0],10)||0; curM = parseInt(pts[1],10)||0; }
   }
   var hId = 'oth_' + memberId + '_' + colId;
   var mId = 'otm_' + memberId + '_' + colId;
-  var cb  = 'window.otChanged(' + memberId + ',\'' + colId + '\',\'' + hId + '\',\'' + mId + '\')';
+  
+  // 入力制限と全選択の処理
+  var onInputAttr = "if(this.value.length>2)this.value=this.value.slice(-2)"; // 最新の2桁を取る
+  var onFocusAttr = "this.select()"; // フォーカス時に全選択して上書きしやすくする
+  
   return '<div class="ot-wrap">'
-    + '<input type="number" id="' + hId + '" class="ot-spin" min="0" max="60" step="1" value="' + curH + '" onblur="' + cb + '" onkeydown="if(event.key===\'Enter\'){event.preventDefault();document.getElementById(\''+mId+'\')?.focus();}">' 
+    + '<input type="number" id="' + hId + '" class="ot-spin" min="0" max="99" value="' + curH + '" '
+    + ' oninput="' + onInputAttr + '" '
+    + ' onfocus="' + onFocusAttr + '" '
+    + ' onblur="window.otChanged(' + memberId + ',\'' + colId + '\',\'' + hId + '\',\'' + mId + '\')" '
+    + ' onkeydown="if(event.key===\'Enter\'){event.preventDefault();document.getElementById(\''+mId+'\')?.focus();}"> ' 
     + '<span class="ot-sep">:</span>'
-    + '<input type="number" id="' + mId + '" class="ot-spin" min="0" max="45" step="15" value="' + curM + '" onblur="' + cb + '">'
+    + '<input type="number" id="' + mId + '" class="ot-spin" min="0" max="59" value="' + curM + '" '
+    + ' oninput="' + onInputAttr + '" '
+    + ' onfocus="' + onFocusAttr + '" '
+    + ' onblur="window.otChanged(' + memberId + ',\'' + colId + '\',\'' + hId + '\',\'' + mId + '\')" '
+    + ' onkeydown="if(event.key===\'Enter\'){event.preventDefault();document.getElementById(\''+hId+'\')?.focus();}"> '
     + '</div>';
 };
 
 window.otChanged = function(memberId, colId, hId, mId) {
-  var hEl = document.getElementById(hId);
+var hEl = document.getElementById(hId);
   var mEl = document.getElementById(mId);
   if (!hEl || !mEl) return;
   var hRaw = hEl.value.trim();
   var mRaw = mEl.value.trim();
-  // 両方空なら空欄として保存
   if (hRaw === '' && mRaw === '') {
     var mem = members.find(function(x){return x.id===memberId;});
     if (mem) { mem[colId] = ''; saveData(); }
     return;
   }
-  var h = hRaw === '' ? 0 : Math.min(60, Math.max(0, parseInt(hRaw,10)||0));
-  var m = mRaw === '' ? 0 : parseInt(mRaw,10)||0;
-  // 分を15刻みに丸める
-  m = Math.round(m/15)*15;
-  if (m >= 60) { m = 45; }
-  // 値を書き戻さない（空欄が0に変わるのを防ぐ）
-  var val = (h === 0 && m === 0) ? '' : h + ':' + (m < 10 ? '0'+m : ''+m);
+  var h = hRaw === '' ? 0 : Math.min(99, Math.max(0, parseInt(hRaw,10)||0));
+  var m = mRaw === '' ? 0 : Math.min(59, Math.max(0, parseInt(mRaw,10)||0));
+  var val = (h === 0 && m === 0 && hRaw==='' && mRaw==='') ? '' : h + ':' + (m < 10 ? '0'+m : ''+m);
   var mem = members.find(function(x){return x.id===memberId;});
   if (mem) { mem[colId] = val; saveData(); }
 };
@@ -920,7 +1074,13 @@ window.openPopup = function(e, id, colId) {
 };
 window.applyVal = function(id, cid, val) {
   var m=members.find(function(x){return x.id===id;});
-  if(m) m[cid]=val; window.closePop(); saveData(); render();
+  if(m) {
+    // 消去ボタン（valが空）が押されたら "—" を入れる
+    m[cid] = (val === '' || val === null) ? '—' : val;
+  }
+  window.closePop();
+  saveData();
+  render();
 };
 window.applyStatusCustom = function(id, cid) {
   var v=document.getElementById('pop-inp'); if(!v||!v.value.trim()) return;
