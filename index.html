@@ -698,7 +698,11 @@ function loadData() {
   if (el) el.textContent = '読み込み中...';
 
   // GASからデータ取得（no-corsが使えないのでGETはcorsで取得）
-  fetch(GAS_URL + '?t=' + Date.now(), { redirect: 'follow' })
+ fetch(GAS_URL + '?t=' + Date.now(), { 
+  method: 'GET',
+  mode: 'cors',      // 明示的にCORSモードを指定
+  redirect: 'follow' 
+})
     .then(function(r){ return r.json(); })
     .then(function(data){
       if (data && data.members) {
