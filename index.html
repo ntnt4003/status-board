@@ -670,7 +670,6 @@ function saveData() {
   if (el) el.textContent = '保存中...';
   fetch(GAS_URL, {
     method: 'POST',
-    mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain' },
     body: json
   }).then(function() {
