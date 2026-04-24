@@ -1393,6 +1393,12 @@ function setupModalSort(containerId, selector, onChange) {
   });
 }
 
+// 30秒ごとに自動でデータを再読み込みする（30000ミリ秒 = 30秒）
+setInterval(function() {
+  console.log('自動更新中...');
+  loadData(); 
+}, 30000);
+ 
 /* ===================== 起動 ===================== */
 loadData();
 render();
