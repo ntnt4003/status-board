@@ -979,51 +979,81 @@ function startColResize(e, ci, th) {
 
 /* ===================== フィールド更新 ===================== */
 
-/* ===================== 残業予測セル生成 ===================== */
+/* ===================== 残業予測セル生成（ホイール操作） ===================== */
 window.makeOtSelect = function(memberId, colId, val) {
-var curH = '', curM = '';
+  var curH = 0;
+  var curM = 0;
   if (val && val !== '') {
     var pts = String(val).split(':');
     if (pts.length === 2) { curH = parseInt(pts[0],10)||0; curM = parseInt(pts[1],10)||0; }
   }
   var hId = 'oth_' + memberId + '_' + colId;
   var mId = 'otm_' + memberId + '_' + colId;
-  
-  // 入力制限と全選択の処理
-  var onInputAttr = "if(this.value.length>2)this.value=this.value.slice(-2)"; // 最新の2桁を取る
-  var onFocusAttr = "this.select()"; // フォーカス時に全選択して上書きしやすくする
-  
-  return '<div class="ot-wrap">'
-    + '<input type="number" id="' + hId + '" class="ot-spin" min="0" max="99" value="' + curH + '" '
-    + ' oninput="' + onInputAttr + '" '
-    + ' onfocus="' + onFocusAttr + '" '
-    + ' onblur="window.otChanged(' + memberId + ',\'' + colId + '\',\'' + hId + '\',\'' + mId + '\')" '
-    + ' onkeydown="if(event.key===\'Enter\'){event.preventDefault();document.getElementById(\''+mId+'\')?.focus();}"> ' 
+
+  var hMin = (colId === 'overtime') ? -30 : (colId === 'back') ? 8 : 0;
+  var hMax = (colId === 'overtime') ? 60  : (colId === 'back') ? 23 : 99;
+
+  function makeWheel(id, v, min, max) {
+    var disp = (v >= 0 && v < 10) ? '0'+v : ''+v;
+    return '<div id="'+id+'" data-val="'+v+'" data-min="'+min+'" data-max="'+max+'"'
+      +' onwheel="event.preventDefault();window.otWheel(event,\''+id+'\','+memberId+',\''+colId+'\',\''+hId+'\',\''+mId+'\')"'
+      +' ondblclick="window.otReset('+memberId+',\''+colId+'\',\''+hId+'\',\''+mId+'\')"'
+      +' style="width:28px;height:26px;border:1px solid var(--border-color);border-radius:4px;background:#fff;'
+      +'font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;'
+      +'cursor:ns-resize;user-select:none;color:var(--text-main);">'+disp+'</div>';
+  }
+
+  return '<div class="ot-wrap" style="gap:2px;">'
+    + makeWheel(hId, curH, hMin, hMax)
     + '<span class="ot-sep">:</span>'
-    + '<input type="number" id="' + mId + '" class="ot-spin" min="0" max="59" value="' + curM + '" '
-    + ' oninput="' + onInputAttr + '" '
-    + ' onfocus="' + onFocusAttr + '" '
-    + ' onblur="window.otChanged(' + memberId + ',\'' + colId + '\',\'' + hId + '\',\'' + mId + '\')" '
-    + ' onkeydown="if(event.key===\'Enter\'){event.preventDefault();document.getElementById(\''+hId+'\')?.focus();}"> '
+    + makeWheel(mId, curM, 0, 45)
     + '</div>';
 };
 
-window.otChanged = function(memberId, colId, hId, mId) {
-var hEl = document.getElementById(hId);
+window.otWheel = function(e, targetId, memberId, colId, hId, mId) {
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  var cur = parseInt(el.getAttribute('data-val'), 10);
+  var min = parseInt(el.getAttribute('data-min'), 10);
+  var max = parseInt(el.getAttribute('data-max'), 10);
+  var delta = e.deltaY < 0 ? -1 : 1;  // 下回転＝増加
+
+  var isMins = (targetId === mId);
+  if (isMins) {
+    var steps = [0, 15, 30, 45];
+    var idx = steps.indexOf(cur);
+    if (idx === -1) idx = 0;
+    idx = (idx + delta + steps.length) % steps.length;
+    cur = steps[idx];
+  } else {
+    cur = cur + delta;
+    if (cur > max) cur = min;
+    if (cur < min) cur = max;
+  }
+
+  el.setAttribute('data-val', cur);
+  el.textContent = (cur >= 0 && cur < 10) ? '0'+cur : ''+cur;
+
+  var hEl = document.getElementById(hId);
   var mEl = document.getElementById(mId);
   if (!hEl || !mEl) return;
-  var hRaw = hEl.value.trim();
-  var mRaw = mEl.value.trim();
-  if (hRaw === '' && mRaw === '') {
-    var mem = members.find(function(x){return x.id===memberId;});
-    if (mem) { mem[colId] = ''; saveData(); }
-    return;
-  }
-  var h = hRaw === '' ? 0 : Math.min(99, Math.max(0, parseInt(hRaw,10)||0));
-  var m = mRaw === '' ? 0 : Math.min(59, Math.max(0, parseInt(mRaw,10)||0));
-  var val = (h === 0 && m === 0 && hRaw==='' && mRaw==='') ? '' : h + ':' + (m < 10 ? '0'+m : ''+m);
-  var mem = members.find(function(x){return x.id===memberId;});
-  if (mem) { mem[colId] = val; saveData(); }
+  var h = parseInt(hEl.getAttribute('data-val'), 10) || 0;
+  var m = parseInt(mEl.getAttribute('data-val'), 10) || 0;
+  var newVal = h + ':' + (m < 10 ? '0'+m : ''+m);
+  var mem = members.find(function(x){ return x.id === memberId; });
+  if (mem) { mem[colId] = newVal; saveData(); }
+};
+
+window.otReset = function(memberId, colId, hId, mId) {
+  var hEl = document.getElementById(hId);
+  var mEl = document.getElementById(mId);
+  if (!hEl || !mEl) return;
+  hEl.setAttribute('data-val', 0);
+  hEl.textContent = '00';
+  mEl.setAttribute('data-val', 0);
+  mEl.textContent = '00';
+  var mem = members.find(function(x){ return x.id === memberId; });
+  if (mem) { mem[colId] = '0:00'; saveData(); }
 };
 
 window.setField = function(id, field, val) {
@@ -1398,7 +1428,7 @@ setInterval(function() {
   console.log('自動更新中...');
   loadData(); 
 }, 30000);
- 
+
 /* ===================== 起動 ===================== */
 loadData();
 render();
