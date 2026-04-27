@@ -1010,7 +1010,14 @@ window.makeOtSelect = function(memberId, colId, val) {
     + '</div>';
 };
 
+var otWheelLast = 0;
+var otSaveTimer = null;
+
 window.otWheel = function(e, targetId, memberId, colId, hId, mId) {
+  var now = Date.now();
+  if (now - otWheelLast < 80) return;
+  otWheelLast = now;
+
   var el = document.getElementById(targetId);
   if (!el) return;
   var cur = parseInt(el.getAttribute('data-val'), 10);
@@ -1026,9 +1033,13 @@ window.otWheel = function(e, targetId, memberId, colId, hId, mId) {
     idx = (idx + delta + steps.length) % steps.length;
     cur = steps[idx];
   } else {
-    cur = cur + delta;
-    if (cur > max) cur = min;
-    if (cur < min) cur = max;
+    if (cur < min || cur > max) {
+      cur = min;
+    } else {
+      cur = cur + delta;
+      if (cur > max) cur = min;
+      if (cur < min) cur = max;
+    }
   }
 
   el.setAttribute('data-val', cur);
@@ -1041,7 +1052,9 @@ window.otWheel = function(e, targetId, memberId, colId, hId, mId) {
   var m = parseInt(mEl.getAttribute('data-val'), 10) || 0;
   var newVal = h + ':' + (m < 10 ? '0'+m : ''+m);
   var mem = members.find(function(x){ return x.id === memberId; });
-  if (mem) { mem[colId] = newVal; saveData(); }
+  if (mem) { mem[colId] = newVal; }
+  clearTimeout(otSaveTimer);
+  otSaveTimer = setTimeout(function(){ saveData(); }, 300);
 };
 
 window.otReset = function(memberId, colId, hId, mId) {
