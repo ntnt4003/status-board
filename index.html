@@ -1015,7 +1015,7 @@ var otSaveTimer = null;
 
 window.otWheel = function(e, targetId, memberId, colId, hId, mId) {
   var now = Date.now();
-  if (now - otWheelLast < 80) return;
+  if (now - otWheelLast < 30) return;
   otWheelLast = now;
 
   var el = document.getElementById(targetId);
@@ -1112,9 +1112,16 @@ window.openPopup = function(e, id, colId) {
     +'</div></div>';
   document.getElementById('popup-wrap').appendChild(p);
   var r=e.target.getBoundingClientRect();
-  var left=r.left+window.scrollX, top=r.bottom+window.scrollY+4;
+  var left=r.left;
+  var popH=p.offsetHeight||380;
+  var top;
+  if(r.bottom+popH+4>window.innerHeight) {
+    top=r.top-popH-4;
+  } else {
+    top=r.bottom+4;
+  }
   if(left+200>window.innerWidth-8) left=window.innerWidth-208;
-  p.style.top=top+'px'; p.style.left=Math.max(4,left)+'px';
+  p.style.top=Math.max(4,top)+'px'; p.style.left=Math.max(4,left)+'px';
   setTimeout(function(){var el=document.getElementById('pop-inp');if(el)el.focus();},20);
 };
 window.applyVal = function(id, cid, val) {
