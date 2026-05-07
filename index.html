@@ -603,7 +603,7 @@ var INITIAL_DATA = {
     { "label": "退勤", "color": "#64748b", "bg": "#f1f5f9" },
     { "label": "有休", "color": "#e11d48", "bg": "#fff1f2" },
     { "label": "午前休", "color": "#d97706", "bg": "#fef3c7" },
- 　 { "label": "午後休", "color": "#d97706", "bg": "#fef3c7" },    
+　 { "label": "午後休", "color": "#d97706", "bg": "#fef3c7" },
     { "label": "外出中", "color": "#0284c7", "bg": "#e0f2fe" },
     { "label": "夜勤",  "color": "#7c3aed", "bg": "#ede9fe" }
   ],
@@ -980,6 +980,7 @@ window.makeOtSelect = function(memberId, colId, val) {
     return '<div id="'+id+'" data-val="'+v+'" data-min="'+min+'" data-max="'+max+'"'
       +' onwheel="event.preventDefault();window.otWheel(event,\''+id+'\','+memberId+',\''+colId+'\',\''+hId+'\',\''+mId+'\')"'
       +' ondblclick="window.otReset('+memberId+',\''+colId+'\',\''+hId+'\',\''+mId+'\')"'
+      +' onclick="event.stopPropagation();window.otActivate(\''+id+'\',\''+hId+'\',\''+mId+'\')"'
       +' style="width:28px;height:26px;border:1px solid var(--border-color);border-radius:4px;background:#fff;'
       +'font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;'
       +'cursor:ns-resize;user-select:none;color:var(--text-main);">'+disp+'</div>';
@@ -994,8 +995,34 @@ window.makeOtSelect = function(memberId, colId, val) {
 
 var otWheelLast = 0;
 var otSaveTimer = null;
+var otActivePair = [];
+
+window.otActivate = function(id, hId, mId) {
+  if (otActivePair.indexOf(id) !== -1) { otDeactivate(); return; }
+  otDeactivate();
+  otActivePair = [hId, mId];
+  [hId, mId].forEach(function(eid) {
+    var el = document.getElementById(eid);
+    if (el) el.style.borderColor = 'var(--brand-primary)';
+  });
+};
+
+function otDeactivate() {
+  otActivePair.forEach(function(eid) {
+    var el = document.getElementById(eid);
+    if (el) el.style.borderColor = 'var(--border-color)';
+  });
+  otActivePair = [];
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest || !e.target.closest('[id^="oth_"],[id^="otm_"]')) {
+    otDeactivate();
+  }
+});
 
 window.otWheel = function(e, targetId, memberId, colId, hId, mId) {
+  if (otActivePair.indexOf(targetId) === -1) return;
   var now = Date.now();
   if (now - otWheelLast < 30) return;
   otWheelLast = now;
