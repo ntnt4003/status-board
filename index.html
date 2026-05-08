@@ -693,7 +693,7 @@ function loadData() {
     .then(function(r){ return r.json(); })
     .then(function(data){
       if (data && data.members) {
-        applyData(data);
+        applyData(data, true);
         // ローカルキャッシュも更新
         try { localStorage.setItem('status_board_backup', JSON.stringify(data)); } catch(e) {}
         autoFitColumns();
@@ -746,7 +746,7 @@ function autoFitColumns() {
 }
 
 
-function applyData(data) {
+function applyData(data, fromGAS) {
   members    = data.members    || JSON.parse(JSON.stringify(INITIAL_DATA.members));
   cols       = (data.cols && data.cols.length > 0) ? data.cols : JSON.parse(JSON.stringify(INITIAL_DATA.cols));
   statuses   = (data.statuses && data.statuses.length > 0) ? data.statuses : JSON.parse(JSON.stringify(INITIAL_DATA.statuses));
@@ -754,9 +754,11 @@ function applyData(data) {
   nextColId  = data.nextColId  || INITIAL_DATA.nextColId || 100;
   titleEmoji = data.titleEmoji || INITIAL_DATA.titleEmoji || '🤠';
   titleText  = data.titleText  || INITIAL_DATA.titleText || '品証ｽﾃｰﾀｽﾎﾞｰﾄﾞ';
-  headerComment = data.headerComment || '';
-  var hc = document.getElementById('header-comment');
-  if (hc) hc.value = headerComment;
+  if (fromGAS) {
+    headerComment = data.headerComment || '';
+    var hc = document.getElementById('header-comment');
+    if (hc) hc.value = headerComment;
+  }
   viewDefinitions = data.viewDefinitions || JSON.parse(JSON.stringify(INITIAL_DATA.viewDefinitions));
   if (!viewDefinitions[activeView]) {
     activeView = Object.keys(viewDefinitions)[0] || '全体';
