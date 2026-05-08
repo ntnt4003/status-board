@@ -176,10 +176,14 @@ tr:hover .row-del-btn { opacity: 1; }
       <div class="view-tabs" id="view-tabs" style="margin-bottom: 0;"></div>
     </div>
     
-    <div style="padding-right: 780px; white-space: nowrap; flex-shrink: 1; text-align: right; min-width: 0;"> 
-      <a href="https://id.obc.jp/m6ofohnw7qf6/?manuallogin=True" target="_blank" style="font-size: 14px; color: var(--brand-primary); text-decoration: none; font-weight: 800; border-bottom: 1px solid var(--brand-primary);">
+    <div style="display:flex; align-items:center; flex:1; min-width:0;">
+      <a href="https://id.obc.jp/m6ofohnw7qf6/?manuallogin=True" target="_blank" style="margin-left:40px; font-size: 14px; color: var(--brand-primary); text-decoration: none; font-weight: 800; border-bottom: 1px solid var(--brand-primary); flex-shrink:0; white-space:nowrap;">
         ▶︎ 出退勤打刻(Desknet's)
       </a>
+      <input type="text" id="header-comment" placeholder="コメントを入力..." maxlength="100"
+        style="margin-left:300px; font-size:13px; padding:4px 10px; border:1px solid var(--border-color); border-radius:6px;
+               flex:1; color:var(--text-main); background:#fff; outline:none;"
+        oninput="window.saveHeaderComment()">
     </div>
 
   </div>
@@ -201,6 +205,7 @@ tr:hover .row-del-btn { opacity: 1; }
 /* ===================== アプリ状態 ===================== */
 var members = [], cols = [], statuses = [], nextId = 10, nextColId = 100;
 var titleEmoji = '🤠', titleText = '品証ｽﾃｰﾀｽﾎﾞｰﾄﾞ';
+var headerComment = '';
 var viewDefinitions = { '全体': [], '事務所': [], '検査': [] };
 var activeView = '全体';
 var editingTitle = false, openPop = null;
@@ -644,7 +649,7 @@ function saveData() {
   var data = { members:members, cols:cols, statuses:statuses,
     nextId:nextId, nextColId:nextColId,
     titleEmoji:titleEmoji, titleText:titleText,
-    viewDefinitions:viewDefinitions };
+    viewDefinitions:viewDefinitions, headerComment:headerComment };
   var json = JSON.stringify(data);
   try { localStorage.setItem('status_board_backup', json); } catch(e) {}
   if (!GAS_URL) return;
@@ -749,6 +754,9 @@ function applyData(data) {
   nextColId  = data.nextColId  || INITIAL_DATA.nextColId || 100;
   titleEmoji = data.titleEmoji || INITIAL_DATA.titleEmoji || '🤠';
   titleText  = data.titleText  || INITIAL_DATA.titleText || '品証ｽﾃｰﾀｽﾎﾞｰﾄﾞ';
+  headerComment = data.headerComment || '';
+  var hc = document.getElementById('header-comment');
+  if (hc) hc.value = headerComment;
   viewDefinitions = data.viewDefinitions || JSON.parse(JSON.stringify(INITIAL_DATA.viewDefinitions));
   if (!viewDefinitions[activeView]) {
     activeView = Object.keys(viewDefinitions)[0] || '全体';
@@ -1076,6 +1084,15 @@ window.otReset = function(memberId, colId, hId, mId) {
   mEl.textContent = '00';
   var mem = members.find(function(x){ return x.id === memberId; });
   if (mem) { mem[colId] = '0:00'; saveData(); }
+};
+
+var saveHeaderCommentTimer = null;
+window.saveHeaderComment = function() {
+  var el = document.getElementById('header-comment');
+  if (!el) return;
+  headerComment = el.value;
+  clearTimeout(saveHeaderCommentTimer);
+  saveHeaderCommentTimer = setTimeout(function(){ saveData(); }, 500);
 };
 
 window.setField = function(id, field, val) {
