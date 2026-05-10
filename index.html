@@ -647,7 +647,7 @@ var INITIAL_DATA = {
   }
 };
 
-/* ===================== 保存・読み込み (localStorage) ===================== */
+/* ===================== 保存・読み込み ===================== */
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyQnARugbFePKbnTlxiLSU6LEyCue5pmB8bjicpD9GQGBYQNusWm7fzxlxLRdQ80GwjWw/exec';
 
 function saveData() {
@@ -656,7 +656,6 @@ function saveData() {
     titleEmoji:titleEmoji, titleText:titleText,
     viewDefinitions:viewDefinitions, headerComment:headerComment };
   var json = JSON.stringify(data);
-  try { localStorage.setItem('status_board_backup', json); } catch(e) {}
   if (!GAS_URL) return;
   var el = document.getElementById('footer-uid');
   if (el) el.textContent = '保存中...';
@@ -672,14 +671,8 @@ function saveData() {
 
 function loadData() {
   var el = document.getElementById('footer-uid');
-  // まずローカルキャッシュで即表示
-  try {
-    var local = localStorage.getItem('status_board_backup');
-    if (local) { applyData(JSON.parse(local)); }
-    else { applyData(JSON.parse(JSON.stringify(INITIAL_DATA))); }
-  } catch(e) {
-    applyData(JSON.parse(JSON.stringify(INITIAL_DATA)));
-  }
+  // 初期データで即表示（localStorageは使わない）
+  applyData(JSON.parse(JSON.stringify(INITIAL_DATA)));
   autoFitColumns();
   render();
 
@@ -689,18 +682,15 @@ function loadData() {
   }
   if (el) el.textContent = '読み込み中...';
 
-  // GASからデータ取得（no-corsが使えないのでGETはcorsで取得）
- fetch(GAS_URL + '?t=' + Date.now(), { 
-  method: 'GET',
-  mode: 'cors',      // 明示的にCORSモードを指定
-  redirect: 'follow' 
-})
+  fetch(GAS_URL + '?t=' + Date.now(), {
+    method: 'GET',
+    mode: 'cors',
+    redirect: 'follow'
+  })
     .then(function(r){ return r.json(); })
     .then(function(data){
       if (data && data.members) {
         applyData(data, true);
-        // ローカルキャッシュも更新
-        try { localStorage.setItem('status_board_backup', JSON.stringify(data)); } catch(e) {}
         autoFitColumns();
         render();
         if (el) el.textContent = '読込完了 ' + new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
@@ -708,7 +698,7 @@ function loadData() {
     })
     .catch(function(e){
       console.error('Load error:', e);
-      if (el) el.textContent = 'オフライン（キャッシュ表示）';
+      if (el) el.textContent = 'オフライン（初期データ表示）';
     });
 }
 
@@ -1438,7 +1428,7 @@ window.handleFileSelect = function(e) {
     var data;
     try{ data=JSON.parse(ev.target.result); } catch(err){ alert('JSONの解析に失敗しました。'); return; }
     if(!confirm('現在のデータをインポート内容で上書きしますか？')) return;
-    applyData(data); autoFitColumns(); saveData(); render(); window.closeModal();
+    applyData(data, true); autoFitColumns(); saveData(); render(); window.closeModal();
   };
   reader.readAsText(file);
 };
@@ -1476,10 +1466,35 @@ function setupModalSort(containerId, selector, onChange) {
   });
 }
 
-// 30秒ごとに自動でデータを再読み込みする（30000ミリ秒 = 30秒）
+// GASからデータだけ取得する（画面リセットなし）
+function fetchLatest() {
+  if (!GAS_URL) return;
+  var el = document.getElementById('footer-uid');
+  if (el) el.textContent = '自動更新中...';
+  fetch(GAS_URL + '?t=' + Date.now(), {
+    method: 'GET',
+    mode: 'cors',
+    redirect: 'follow'
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data && data.members) {
+        applyData(data, true);
+        autoFitColumns();
+        render();
+        if (el) el.textContent = '読込完了 ' + new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+      }
+    })
+    .catch(function(e){
+      console.error('Auto update error:', e);
+      if (el) el.textContent = 'オフライン（初期データ表示）';
+    });
+}
+
+// 30秒ごとに自動更新（画面リセットなし）
 setInterval(function() {
   console.log('自動更新中...');
-  loadData(); 
+  fetchLatest();
 }, 30000);
 
 /* ===================== 起動 ===================== */
