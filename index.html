@@ -672,11 +672,11 @@ function saveData() {
   if (!GAS_URL) return;
   var el = document.getElementById('footer-uid');
   if (el) el.textContent = '保存中...';
-  // デバイスIDをヘッダーに付与（データ本体には含まない）
+  // デバイスIDをボディに付与して送信
+  var payload = JSON.stringify({ data: data, deviceId: getDeviceId() });
   fetch(GAS_URL, {
     method: 'POST',
-    body: json,
-    headers: { 'X-Device-Id': getDeviceId() }
+    body: payload
   }).then(function() {
     if (el) el.textContent = '保存済み ' + new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
   }).catch(function(e) {
