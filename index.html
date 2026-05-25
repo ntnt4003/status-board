@@ -653,6 +653,16 @@ var INITIAL_DATA = {
 /* ===================== 保存・読み込み ===================== */
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyQnARugbFePKbnTlxiLSU6LEyCue5pmB8bjicpD9GQGBYQNusWm7fzxlxLRdQ80GwjWw/exec';
 
+// デバイスID（識別用、データ保存には使わない）
+function getDeviceId() {
+  var id = localStorage.getItem('sb_device_id');
+  if (!id) {
+    id = 'PC-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    localStorage.setItem('sb_device_id', id);
+  }
+  return id;
+}
+
 function saveData() {
   var data = { members:members, cols:cols, statuses:statuses,
     nextId:nextId, nextColId:nextColId,
@@ -662,9 +672,11 @@ function saveData() {
   if (!GAS_URL) return;
   var el = document.getElementById('footer-uid');
   if (el) el.textContent = '保存中...';
+  // デバイスIDをヘッダーに付与（データ本体には含まない）
   fetch(GAS_URL, {
     method: 'POST',
-    body: json
+    body: json,
+    headers: { 'X-Device-Id': getDeviceId() }
   }).then(function() {
     if (el) el.textContent = '保存済み ' + new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
   }).catch(function(e) {
