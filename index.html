@@ -847,7 +847,11 @@ function renderHead() {
 
     var inner = document.createElement('div');
     inner.className = 'th-inner';
-    inner.innerHTML = '<span style="flex:1;overflow:hidden;text-overflow:ellipsis">'+esc(col.label)+'</span>';
+    var labelHtml = esc(col.label);
+    if (col.type === 'status') {
+      labelHtml += '<span style="font-size:10px;font-weight:normal;">(更新日時)</span>';
+    }
+    inner.innerHTML = '<span style="flex:1;overflow:hidden;text-overflow:ellipsis">'+labelHtml+'</span>';
     th.appendChild(inner);
 
     var resizer = document.createElement('div');
