@@ -887,8 +887,13 @@ function renderBody() {
       var content = '';
       if (col.type==='status') {
         var sd = getStatusDef(val);
-        content = '<span class="badge" style="background:'+esc(sd.bg)+';color:'+esc(sd.color)+'"'
-          +' onclick="window.openPopup(event,'+m.id+',\''+col.id+'\')">'+esc(sd.label)+'</span>';
+        var updKey = col.id + '_updated';
+        var updTime = m[updKey] ? '<div style="font-size:9px;color:var(--text-muted);text-align:center;line-height:1.2;margin-top:1px;">'+esc(m[updKey])+'</div>' : '';
+        content = '<div style="display:inline-flex;align-items:flex-end;gap:4px;">'
+          +'<span class="badge" style="background:'+esc(sd.bg)+';color:'+esc(sd.color)+'"'
+          +' onclick="window.openPopup(event,'+m.id+',\''+col.id+'\')">'+esc(sd.label)+'</span>'
+          +(m[updKey] ? '<div style="font-size:9px;color:var(--text-muted);line-height:1.3;text-align:left;">'+esc(m[updKey]).replace(' ','<br>')+'</div>' : '')
+          +'</div>';
       } else if (col.type==='number') {
         content = window.makeOtSelect(m.id, col.id, val);
       } else {
@@ -1167,6 +1172,16 @@ window.applyVal = function(id, cid, val) {
   if(m) {
     // 消去ボタン（valが空）が押されたら "—" を入れる
     m[cid] = (val === '' || val === null) ? '—' : val;
+    // ステータス列の場合は更新日時を記録
+    var col = cols.find(function(c){ return c.id === cid; });
+    if (col && col.type === 'status') {
+      var now = new Date();
+      var mm = (now.getMonth()+1);
+      var dd = now.getDate();
+      var hh = ('0'+now.getHours()).slice(-2);
+      var mi = ('0'+now.getMinutes()).slice(-2);
+      m[cid + '_updated'] = mm + '/' + dd + ' ' + hh + ':' + mi;
+    }
   }
   window.closePop();
   saveData();
