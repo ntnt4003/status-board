@@ -668,18 +668,22 @@ function saveData() {
   var data = { members:members, cols:cols, statuses:statuses,
     nextId:nextId, nextColId:nextColId,
     titleEmoji:titleEmoji, titleText:titleText,
-    viewDefinitions:viewDefinitions, headerComment:headerComment };
-  var json = JSON.stringify(data);
+    viewDefinitions:viewDefinitions, headerComment:headerComment,
+    _deviceId: getDeviceId() };
+  var payload = JSON.stringify(data);
   if (!GAS_URL) return;
   var el = document.getElementById('footer-uid');
   if (el) el.textContent = '保存中...';
-  // デバイスIDをボディに付与して送信
-  var payload = JSON.stringify({ data: data, deviceId: getDeviceId() });
   fetch(GAS_URL, {
     method: 'POST',
     body: payload
-  }).then(function() {
-    if (el) el.textContent = '保存済み ' + new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+  }).then(function(r){ return r.json(); })
+  .then(function(res) {
+    if (res.status === 'rejected') {
+      if (el) el.textContent = '⚠️保存拒否（データ異常）';
+    } else {
+      if (el) el.textContent = '保存済み ' + new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    }
   }).catch(function(e) {
     if (el) el.textContent = '保存失敗';
   });
